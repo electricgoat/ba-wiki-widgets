@@ -8,8 +8,8 @@ var affectionTableCounter = 0;
 	
 $( document ).ready(function() {
 	//if (typeof statCalc == 'undefined') initAffectionTable(); //Affection tables init is normally called from statcalc
-	$(".affection-level input").on("change mouseup keyup click", function(){affectionChange($(this).closest("table"), $(this).val());});
-	$(".affection-data").children("div").on("click", function(){affectionChange($(this).closest("table"),$(this).attr('data-level'));});
+	$(".affection-level input").on("input change", function(event){var table = $(this).closest("table"); affectionChange(table, inputNumber($(this), 1, affection_cap, affection_data[table.attr('data-character-id')].level, event.type == 'change'));});
+	$(".affection-data").children("div").on("click", function(){$(this).closest("table").find(".affection-level input").val($(this).attr('data-level')); affectionChange($(this).closest("table"),$(this).attr('data-level'));});
 });
 	
 
@@ -69,7 +69,6 @@ function affectionChange (affectionTable, level, call_statCalc){
 	affection_data[affectionTable.attr('data-character-id')].current = effective_bonus;
 	affection_data[affectionTable.attr('data-character-id')].level = level;
 
-	if (affectionTable.find(".affection-level input").val() !== level) affectionTable.find(".affection-level input").val(level);
 	affectionTable.find(".affection-total").html(html_out.substring(0,html_out.length-2));
 
 

@@ -140,7 +140,7 @@ $( document ).ready(function() {
 	initAffectionLink();
 
 	//$(".stattable-controls input").on("change mouseup keyup click", function(){levelChange($(this).closest("table"));statTableRecalc($(this).closest("table"));});
-	$(".stattable-controls .stattable-level-selector input").on("change mouseup keyup click", function(){updateLevel($(this).val());statTablesRecalc();});
+	$(".stattable-controls .stattable-level-selector input").on("input change", function(event){updateLevel(inputNumber($(this), 1, 100, statCalc[Object.keys(statCalc)[0]].stats.level, event.type == 'change'));statTablesRecalc();});
 	
 	//$(".stattable-rarity-selector").children("img").on("click", function(){rarityChange($(this).closest("table"),$(this).attr('data-rarity'));statTableRecalc($(this).closest("table"));})
 	$(".stattable-rarity-selector").children("span.control").on("click", function(){updateRarity($(this).attr('data-rarity'));statTablesRecalc();});
@@ -792,6 +792,16 @@ function hasNull(target) {
 
 function repeat(string, count) {
     return new Array(count + 1).join(string);
+}
+
+
+// A number box's value between min and max, the fallback while it isn't a number yet; committing (on change) writes it back
+function inputNumber(input, min, max, fallback, commit) {
+	var value = parseInt(input.val());
+	if (isNaN(value)) value = fallback;
+	value = Math.min(max, Math.max(min, value));
+	if (commit && String(value) !== input.val()) input.val(value);
+	return value;
 }
 
 
