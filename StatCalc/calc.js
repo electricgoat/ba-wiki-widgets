@@ -164,9 +164,8 @@ function initStatChart(){
 		// Initialize controls
 		var controlsTable = $('#statchart-controls');
 		// Character rarity
-		var img_regex = /<img[^>]+>/;
 		var raritySelector = controlsTable.find(".stattable-rarity-selector");
-		raritySelector.html(repeat(img_regex.exec($(".stattable-rarity-selector").find(".star-character").html())[0], 5)+" "+repeat(img_regex.exec($(".stattable-rarity-selector").find(".star-weapon").html())[0], max_tier[0]));		
+		raritySelector.html(repeat(page_image($(".stattable-rarity-selector").find(".star-character")).prop('outerHTML'), 5)+" "+repeat(page_image($(".stattable-rarity-selector").find(".star-weapon")).prop('outerHTML'), max_tier[0]));
 		raritySelector.children("img").addClass('mw-no-invert').wrap( '<span class="control"></span>' )
 		raritySelector.children("span.control").each(function(index){$(this).attr('data-rarity',index+1);});
 
@@ -263,7 +262,7 @@ function initStatCalc(){
 		$(this).attr('id',id);
 		//console.log('StatCalc - init table id ' + id);
 
-		initStats($(this).parent(), $(this), id);
+		initStats($(this).closest('.mw-parser-output, body'), $(this), id);
 		
 		//stats[$(this).attr('id')] = JSON.parse($(this).attr('stat-data'));
 		if (!hasNull(statCalc[id].stats)) 
@@ -272,9 +271,8 @@ function initStatCalc(){
 			if (reverse_ingame_stats && ($(this).attr('data-source') == 'ingame')) { reverseStats(id); }
 			
 			// Character rarity
-			var img_regex = /<img[^>]+>/;
 			var raritySelector = $(this).find(".stattable-rarity-selector");
-			raritySelector.html(repeat(img_regex.exec($(".stattable-rarity-selector").find(".star-character").html())[0], 5)+" "+repeat(img_regex.exec($(".stattable-rarity-selector").find(".star-weapon").html())[0], max_tier[0]));
+			raritySelector.html(repeat(page_image($(".stattable-rarity-selector").find(".star-character")).prop('outerHTML'), 5)+" "+repeat(page_image($(".stattable-rarity-selector").find(".star-weapon")).prop('outerHTML'), max_tier[0]));
 			raritySelector.children("img").addClass('mw-no-invert').wrap( '<span class="control"></span>' )
 			raritySelector.children("span.control").each(function(index){$(this).attr('data-rarity',index+1);});
 
@@ -286,7 +284,7 @@ function initStatCalc(){
 			var equipmentControlsHTML = '';
 
 			for (var index = 1; index <= ((typeof statCalc[id].gear.table_id !== 'undefined')?4:3); index++) {
-				statCalc[id].equipment[index] = (index <= 3)?{'type': equipmentTable.find(".equipment-"+index).attr('data-value'), 'image': false, 'title': false}:{'type': 'gear', 'image': $(document).find(".geartable-summary").find("a img").attr('src'), 'title': "Unique gear"};
+				statCalc[id].equipment[index] = (index <= 3)?{'type': equipmentTable.find(".equipment-"+index).attr('data-value'), 'image': false, 'title': false}:{'type': 'gear', 'image': page_imagesrc($(document).find(".geartable-summary a")), 'title': "Unique gear"};
 				
 				var filename = '';
 				var hash = '';
@@ -805,6 +803,20 @@ function wiki_imagesrc(filename, hash, size) {
 function wiki_srcset(filename, hash, size) {
 	size = (typeof size !== 'undefined') ? size : 44; //default, ES5 does not support function defaults
 	return `//static.miraheze.org/bluearchivewiki/thumb/${String(hash).charAt(0)}/${hash}/${filename}/${Math.ceil(size*1.5)}px-${filename} 1.5x, //static.miraheze.org/bluearchivewiki/thumb/${String(hash).charAt(0)}/${hash}/${filename}/${size*2}px-${filename} 2x`;
+}
+
+// Address of the first image in an element. MobileFrontend serves images as placeholders, with the address in data-mw-src
+function page_imagesrc(element) {
+	var image = element.find("img, .lazy-image-placeholder").first();
+	return image.hasClass('lazy-image-placeholder') ? image.attr('data-mw-src') : image.attr('src');
+}
+
+// A copy of the first image in an element; for a MobileFrontend placeholder, the image it stands for
+function page_image(element) {
+	var image = element.find("img, .lazy-image-placeholder").first();
+	if (!image.hasClass('lazy-image-placeholder')) return image.clone();
+	return $('<img decoding="async">').attr({'src': image.attr('data-mw-src'), 'srcset': image.attr('data-mw-srcset') || null, 'alt': image.attr('data-alt') || '',
+		'width': image.attr('data-width'), 'height': image.attr('data-height'), 'class': image.attr('data-class') || null});
 }
 /* Character stat calc - end */	
 

@@ -1,6 +1,6 @@
 # FragCalc
 
-A calculator of what a student's rank-up costs in the Eligma shop, for the character pages of [Blue Archive Wiki](https://bluearchive.wiki). It puts the price ladder of the [Shop page's Eligma Section](https://bluearchive.wiki/wiki/Shop#Eligma_Section) in terms of one student: which Elephs to buy at which price, and the Eligma it all takes. It follows the stat calculator at the root of this repository ([calc.js](../calc.js), previewed in [statCalc.html](../statCalc.html)): a `wikitable` whose controls row the script fills in, with the same star selectors and inputs.
+A calculator of what a student's rank-up costs in the Eligma shop, for the character pages of [Blue Archive Wiki](https://bluearchive.wiki). It puts the price ladder of the [Shop page's Eligma Section](https://bluearchive.wiki/wiki/Shop#Eligma_Section) in terms of one student: which Elephs to buy at which price, and the Eligma it all takes. It follows the stat calculator in [StatCalc](../StatCalc) ([calc.js](../StatCalc/calc.js), previewed in [statCalc.html](../StatCalc/statCalc.html)): a `wikitable` whose controls row the script fills in, with the same star selectors and inputs.
 
 It shows ranks with the wiki's [Template:Rank](https://bluearchive.wiki/wiki/Template:Rank), a rank as one star with its number over it.
 
@@ -47,9 +47,10 @@ The script is the FragCalc gadget, loaded only on the pages of `Category:Pages w
 
 **StatCalc and XPtable move to the same scheme.** `MediaWiki:Common.js` loads `MediaWiki:StatCalc.js` (50.5 KB, 10 KB gzipped) and `MediaWiki:XPtable.js` (8 KB) on every page of the wiki, about 62,800, though the stat calculator is used on the 277 pages with `{{CharacterStatTable}}` and the stat chart, and the XP calculator on a few pages. Each gets a hidden tracking category, becomes a gadget loading on the pages of that category, and its `mw.loader.load` line leaves Common.js. XPtable's gadget is ready in the ba-xptable repository, whose README has its deployment steps (not deployed yet); its pages add the category themselves, their calculators being no template. StatCalc's category will come from `{{CharacterStatTable}}`.
 
-Two things to fix in StatCalc on the way, both seen on 2026-09-30 while checking FragCalc in the skins:
-- In Minerva's mobile view it throws `TypeError: Cannot read properties of undefined (reading 'split')` (`StatCalc.js` line 312, in `initStatCalc`) and doesn't start: the mobile view serves images as placeholders, so the gear image's `src` it reads isn't there. FragCalc's `fragCalcImage` shows how to read them.
-- In Citizen, the stat table sits beside the infobox, which floats right, and its 575px minimum width makes it scroll sideways, by 40px at a 1280px window.
+Things to fix in StatCalc on the way, seen on 2026-09-30 while checking FragCalc in the skins:
+- In Minerva's mobile view it throws `TypeError: Cannot read properties of undefined (reading 'split')` (`StatCalc.js` line 312, in `initStatCalc`) and doesn't start: the mobile view serves images as placeholders, so the gear image's `src` it reads isn't there. FragCalc's `fragCalcImage` shows how to read them. Fixed in [calc.js](../StatCalc/calc.js) (`page_imagesrc`), on the wiki since 2026-09-30.
+- In Citizen it left out the unique weapon's stats, the unique gear and the student's rarity, and in Minerva the rarity (1★ and 2★ students started at 3★): `initStats` looked for them in the stat table's parent, which in Citizen is the wrapper that scrolls wide tables and in Minerva the collapsible section. It looks in the page content now, and copies the rank stars as `fragCalcImage` copies images, which gives them their high-resolution versions in the mobile view. Fixed in [calc.js](../StatCalc/calc.js), on the wiki since 2026-09-30.
+- In Citizen, the stat table sits beside the infobox, which floats right, and its 575px minimum width makes it scroll sideways, by 40px at a 1280px window, which hides most of the unique gear's tier selector.
 
 ## Data
 
