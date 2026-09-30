@@ -1,0 +1,2 @@
+Pages with the Eleph shop calculator, [[Template:FragCalc]], which adds them here. Use as a service category to load the FragCalc gadget, [[MediaWiki:Gadget-FragCalc.js]].
+__HIDDENCAT__

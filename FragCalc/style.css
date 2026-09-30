@@ -1,0 +1,170 @@
+/* FragCalc: Eleph shop cost calculator (Template:FragCalc/styles.css) */
+/* No min-width, unlike the stat table: its controls wrap, and a table beside the infobox (which floats right) only fits
+   the room left, as in Citizen, which wraps tables in a box of their own */
+.ba-template-fragcalc {
+	width: 100%;
+	max-width: 900px;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Centred columns, headers included: not every skin centres a wikitable's th (Citizen doesn't) */
+.ba-template-fragcalc tr.fragcalc-header th,
+.ba-template-fragcalc tr.fragcalc-tier td,
+.ba-template-fragcalc tr.fragcalc-total th {
+	text-align: center;
+	width: 35%;
+}
+
+.ba-template-fragcalc tr.fragcalc-header th:first-child,
+.ba-template-fragcalc tr.fragcalc-tier td:first-child,
+.ba-template-fragcalc tr.fragcalc-total th:first-child {
+	width: 30%;
+}
+
+.ba-template-fragcalc tr.unused td {
+	color: var(--color-disabled, #a2a9b1);
+}
+
+.ba-template-fragcalc tr.unused .item-quantity,
+.ba-template-fragcalc tr.unused .ba-template-itemcard {
+	opacity: 0.5;
+}
+
+.ba-template-fragcalc tr.fragcalc-summary td {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	font-size: 0.9em;
+	text-align: center;
+	color: var(--color-subtle, #54595d);
+}
+
+.ba-template-fragcalc .fragcalc-summary .fragcalc-credits,
+.ba-template-fragcalc .fragcalc-summary .fragcalc-after {
+	white-space: nowrap;
+}
+
+
+/* Controls, as in the stat calculator */
+.ba-template-fragcalc .fragcalc-icons {
+	display: none;
+}
+
+.ba-template-fragcalc .fragcalc-controls > td {
+	font-size: 15px;
+	line-height: 38px;
+}
+
+.ba-template-fragcalc .fragcalc-line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	column-gap: 20px;
+}
+
+.ba-template-fragcalc .fragcalc-rank > .fragcalc-label {
+	display: inline-block;
+	width: 4em;
+}
+
+.ba-template-fragcalc .fragcalc-field .fragcalc-label {
+	margin-right: 4px;
+}
+
+.ba-template-fragcalc .fragcalc-can-buy {
+	margin-left: 12px;
+}
+
+/* Filters go on the stars' spans: the dark mode re-inverts images with a filter of their own */
+.ba-template-fragcalc .fragcalc-stars .control {
+	display: inline-block;
+	padding: 0 1px;
+	line-height: 1;
+	vertical-align: middle;
+	cursor: pointer;
+	transition: .15s transform, .15s filter;
+}
+
+.ba-template-fragcalc .fragcalc-stars .control:not(.weapon) + .weapon {
+	margin-left: 6px;
+}
+
+.ba-template-fragcalc .fragcalc-stars .control img {
+	display: block;
+}
+
+.ba-template-fragcalc .fragcalc-stars .control.inactive {
+	filter: grayscale(1);
+}
+
+.ba-template-fragcalc .fragcalc-stars .control:hover {
+	filter: drop-shadow(0 2px 2px rgb(0 0 0 / 25%));
+	transform: translateY(-1px);
+}
+
+.ba-template-fragcalc .fragcalc-stars .control.inactive:hover {
+	filter: grayscale(1) drop-shadow(0 2px 2px rgb(0 0 0 / 25%));
+}
+
+.ba-template-fragcalc .fragcalc-stars .control:focus {
+	outline: none;
+}
+
+.ba-template-fragcalc .fragcalc-stars .control:focus-visible {
+	outline: 2px solid var(--color-progressive, #36c);
+	outline-offset: 1px;
+	border-radius: 3px;
+}
+
+.ba-template-fragcalc .fragcalc-eleph {
+	width: 40px;
+	height: auto;
+	margin: -3px 2px 0 0;
+	vertical-align: middle;
+}
+
+.ba-template-fragcalc .fragcalc-eligma {
+	width: 30px;
+	height: auto;
+	margin: -3px 2px 0 0;
+	vertical-align: middle;
+}
+
+.ba-template-fragcalc .fragcalc-controls input,
+.ba-template-fragcalc .fragcalc-controls select {
+	font-size: 17px;
+	color: inherit;
+	border: none;
+	background-color: var(--background-color-base, #fff);
+	border-radius: 3px;
+}
+
+.ba-template-fragcalc .fragcalc-controls input {
+	width: 40px;
+	padding: 0 0 0 4px;
+}
+
+.ba-template-fragcalc .fragcalc-owned input {
+	width: 56px;
+}
+
+.ba-template-fragcalc .fragcalc-controls input:disabled {
+	background-color: transparent;
+}
+
+/* Phones: one column, the current state (rank, owned Elephs, shop price) before the target */
+@media (max-width: 599px) {
+	.ba-template-fragcalc .fragcalc-panel {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.ba-template-fragcalc .fragcalc-line {
+		display: contents;
+	}
+
+	.ba-template-fragcalc .fragcalc-rank[data-rank-type="target"] {
+		order: 1;
+	}
+}

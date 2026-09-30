@@ -1,0 +1,74 @@
+<templatestyles src="Template:FragCalc/styles.css"/>
+<includeonly>{| class="wikitable ba-template-fragcalc nohover" data-rarity="{{{rarity|3}}}"
+|+Rank-up cost
+|- class="fragcalc-controls" style="display: none"
+|colspan="3"|<span class="fragcalc-icons"><span class="icon-star">[[File:Icon_star.png|20px|link=]]</span><span class="icon-weapon-star">[[File:Icon_blue_star.png|20px|link=]]</span><span class="icon-eleph">{{ItemCard|{{{eleph|Shiroko's Eleph}}}|40px|text=}}</span><span class="icon-eligma">{{ItemCard|Eligma|40px|text=}}</span><span class="card-price">{{ItemCard|Eligma|quantity=1|text=}}</span><span class="card-eligma">{{ItemCard|Eligma|quantity=1}}</span><span class="card-credits">{{ItemCard|Credits|quantity=1}}</span><span class="fragcalc-ranks">{{Rank|1}}{{Rank|2}}{{Rank|3}}{{Rank|4}}{{Rank|5}}{{Rank|6}}{{Rank|7}}{{Rank|8}}{{Rank|9}}</span></span>
+|- class="fragcalc-header"
+!Price
+!Elephs bought
+!Eligma cost
+|- class="fragcalc-tier"
+|{{ItemCard|Eligma|quantity=1|text=}}
+|20
+|20
+|- class="fragcalc-tier"
+|{{ItemCard|Eligma|quantity=2|text=}}
+|20
+|40
+|- class="fragcalc-tier"
+|{{ItemCard|Eligma|quantity=3|text=}}
+|20
+|60
+|- class="fragcalc-tier"
+|{{ItemCard|Eligma|quantity=4|text=}}
+|20
+|80
+|- class="fragcalc-tier"
+|{{ItemCard|Eligma|quantity=5|text=}}
+|40
+|200
+|- class="fragcalc-total"
+!Total
+!120
+!400
+|- class="fragcalc-summary"
+|colspan="3"|{{Rank|3}} → {{Rank|5}} needs 220 Elephs: 100 owned, 120 to buy · {{ItemCard|Credits|quantity=1200000}} · Shop price afterwards: {{ItemCard|Eligma|quantity=5}}
+|}[[Category:Pages with FragCalc]]</includeonly><noinclude>
+<templatedata>
+{
+	"params": {
+		"eleph": {
+			"label": "Eleph",
+			"description": "Name of the student's Eleph item, as ItemCard takes it. Shiroko's Eleph stands in until it is given.",
+			"example": "Cherino's (Hot Spring) Eleph",
+			"type": "string",
+			"default": "Shiroko's Eleph"
+		},
+		"rarity": {
+			"label": "Rarity",
+			"description": "Star rank the calculator starts from (the student's initial rarity, 1 to 3)",
+			"type": "number",
+			"default": "3"
+		}
+	},
+	"description": "Calculates the Elephs and Eligma a student's rank-up takes, from the student's current rank, the Elephs owned and the Eligma shop's current price for the student's Eleph. Buying goes up the shop's price ladder: 1 Eligma for the first 20 Elephs, 1 more after every 20, up to 5.",
+	"format": "block"
+}
+</templatedata>
+
+== Usage ==
+<pre>
+{{FragCalc|eleph=Shiroko's Eleph}}
+</pre>
+
+{{FragCalc|eleph=Shiroko's Eleph}}
+
+== Remarks ==
+The calculator is the FragCalc gadget, [[MediaWiki:Gadget-FragCalc.js]]; the table above is its example of 3★ → 5★ with 100 Elephs owned, from the first price, which it shows without JavaScript. The gadget loads only on the pages of [[:Category:Pages with FragCalc]], which the template adds them to.
+
+* The shop's price for a student's Eleph starts at 1 Eligma and rises by 1 after every 20 Elephs bought, up to 5, which holds for every later purchase. The price never resets; up to 900 Elephs of a student can be bought in total.
+* Its state is read off the shop: the current price, and how many more Elephs it sells at that price (the MAX amount of the purchase window).
+* Rank-ups cost 30, 80, 100 and 120 Elephs for 2★ to 5★, and 120, 180 and 200 for the unique weapon's UE40, UE50 and UE60; its UE30 comes with 5★.
+* Prices and costs are the same for every student; they are set in the script, from the game data.
+* Ranks show as [[Template:Rank|<nowiki>{{Rank}}</nowiki>]] badges: the table's hidden controls row has one for each rank, which the script copies.
+</noinclude>
