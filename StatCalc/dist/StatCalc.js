@@ -1,3 +1,4 @@
+/* Built from calc.js, table.js, chart.js, affection.js, potential.js, init.js in https://github.com/electricgoat/ba-wiki-widgets */
 /* Character stat calc - start */
 const level_cap = 90;
 const max_tier = [4, 10, 10, 10, 2]; // Max tier for Weapon, Equipment 1, 2, 3, Gear
@@ -545,3 +546,466 @@ function page_image(element) {
 		'width': image.attr('data-width'), 'height': image.attr('data-height'), 'class': image.attr('data-class') || null});
 }
 /* Character stat calc - end */
+
+/* Character stat table - start */
+function initStatCalc(){
+	$(".character-stattable").each(function(){
+		var id = 'statTable-'+(++tableCounter);
+		$(this).attr('id',id);
+
+		initStats($(this).closest('.mw-parser-output, body'), $(this), id);
+
+		if (!hasNull(statCalc[id].stats))
+		{
+			// Estimate raw numbers
+			if (reverse_ingame_stats && ($(this).attr('data-source') == 'ingame')) { reverseStats(id); }
+
+			// Character rarity
+			rarityControls($(this).find(".stattable-rarity-selector"));
+
+			// Level
+			$(this).find(".stattable-controls td").append('<div><span class="stattable-level-selector">Level: <input class="stattable-level" type="number" value="'+level_cap+'" step="1" min="1" max="100" /></span></div>');
+
+			// Equipment
+			var equipmentTable = $('.character-equipment');
+			var equipmentControlsHTML = '';
+
+			for (var index = 1; index <= ((typeof statCalc[id].gear.table_id !== 'undefined')?4:3); index++) {
+				statCalc[id].equipment[index] = (index <= 3)?{'type': equipmentTable.find(".equipment-"+index).attr('data-value'), 'image': false, 'title': false}:{'type': 'gear', 'image': page_imagesrc($(document).find(".geartable-summary a")), 'title': "Unique gear"};
+				equipmentControlsHTML += equipmentControl(index, statCalc[id].equipment[index]);
+			}
+
+			$(this).find(".stattable-controls td>div").append('<span class="stattable-equipment-selector">'+equipmentControlsHTML+'</span>');
+
+			$(this).find(".stattable-controls").css( "display", "" );
+			bindStatControls($(this).find(".stattable-controls"));
+
+			levelChange($(this), level_cap);
+			equipmentChange($(this));
+			rarityChange($(this), statCalc[id].stats.rarity);
+			statTableRecalc($(this));
+
+		}
+		else
+		{ console.log('StatCalc - init cancelled due to incomplete data'); }
+
+	});
+}
+/* Character stat table - end */
+
+/* Character stat chart - start */
+// StatChart controls
+const statchart_equipment_preset = {
+    1: {"type": "hat", "image": false, "title": "Slot 1 equipment"},
+    2: {"type": "bag", "image": false, "title": "Slot 2 equipment"},
+	3: {"type": "watch", "image": false, "title": "Slot 3 equipment"},
+    4: {"type": "gear", "image": "https://static.miraheze.org/bluearchivewiki/d/db/Gear_Icon_10000.png", "title": "Unique gear"},
+}
+
+var percentile_brackets = [];
+
+
+function initStatChart(){
+
+	if ($('#statchart-controls').length > 0) {
+		// Initialize controls
+		var controlsTable = $('#statchart-controls');
+		// Character rarity
+		rarityControls(controlsTable.find(".stattable-rarity-selector"));
+
+		// Level
+		controlsTable.find(".equipment-controls").append('<span class="stattable-level-selector">Level: <input class="stattable-level" type="number" value="'+level_cap+'" step="1" min="1" max="100" /></span>');
+
+		// Equipment
+		var equipmentControlsHTML = '';
+		for (var index = 1; index <= 4; index++) equipmentControlsHTML += equipmentControl(index, statchart_equipment_preset[index]);
+		controlsTable.find(".equipment-controls").append('<span class="stattable-equipment-selector">'+equipmentControlsHTML+'</span>');
+
+
+		// Affection
+		controlsTable.find(".affection-controls > .affection").append('<input type="number" value="50" step="1" min="1" max="50">');
+		controlsTable.find(".affection-controls > .affection input").on("change", function(){affectionChartUpdate($(this).closest("div.affection"));affectionRecalc();statTablesRecalc();});
+		controlsTable.find(".affection-icon").on("click", function(){affectionChartToggle($(this).closest("div.affection"));affectionRecalc();statTablesRecalc();});
+
+		bindStatControls(controlsTable);
+	 }
+
+
+	$(".statchart tr.stattable-stats").each(function(){
+		var id = 'statTable-'+(++tableCounter);
+		if ($(this).attr('data-character-id') !== undefined) id = $(this).attr('data-character-id');
+		$(this).attr('id',id);
+
+		initStats($(this), $(this), id);
+
+		if (!hasNull(statCalc[id].stats))
+		{
+			// Estimate raw numbers
+			if (reverse_ingame_stats && ($(this).attr('data-source') == 'ingame')) { reverseStats(id); }
+
+
+			// Equipment
+			for (var index = 1; index <= ((typeof statCalc[id].gear.table_id !== 'undefined')?4:3); index++) {
+				if (index <= 3) statCalc[id].equipment[index] = {'type': $(this).find(".equipment-"+index).attr('data-value'), 'image': $(this).find(".equipment-"+index).find("a").html()};
+				else statCalc[id].equipment[index] = {'type': 'gear', 'image': $(this).find(".geartable").html(), 'title': "Unique gear"};
+			}
+
+			levelChange($(this), level_cap);
+			equipmentChange($(this));
+			rarityChange($(this), statCalc[id].stats.rarity);
+			statTableRecalc($(this));
+
+		}
+		else
+		{ console.log('StatCalc - init cancelled due to incomplete data'); }
+
+	});
+
+	calcPercentileBrackets();
+	rankCharacters();
+}
+
+
+function calcPercentileBrackets() {
+	for (var i = 20; i > 0; i--) {
+		var ordinal_rank =  i*5/100 * Object.keys(statCalc).length;
+		percentile_brackets.push(Math.ceil(ordinal_rank));
+	}
+}
+
+function rankCharacters() {
+
+	stats_list.forEach(function (element){
+		rank(element);
+	});
+}
+
+function rank(stat_name) {
+	var stats = [];
+
+	$.each( statCalc, function( key, value ) {
+		stats.push(value.current[stat_name]);
+	});
+
+	stats.sort(function(a, b){return b - a;});
+
+	$.each( statCalc, function( key, value ) {
+		var rank = stats.indexOf(value.current[stat_name])+1;
+		$('#'+key).find('.stat-'+stat_name).removeClass(function (index, className) {return (className.match (/(^|\s)rank-\S+/g) || []).join(' ');}).addClass('rank-'+rank);
+
+		var percentile = 0;
+		percentile_brackets.forEach(function (element){
+			if (rank <= element) percentile = (percentile_brackets.indexOf(element)+1)*5;
+		});
+		$('#'+key).find('.stat-'+stat_name).removeClass(function (index, className) {return (className.match (/(^|\s)percentile-\S+/g) || []).join(' ');}).addClass('percentile-'+percentile);
+	});
+}
+
+
+function affectionChartUpdate (element){
+	var type = element.attr('data-affection-type');
+	var input = element.find('input');
+	var level = input.val();
+
+	level = (typeof level !== 'undefined' && !isNaN(level)) ? level : 1 ;
+
+	if (level < 1) 	 			{ input.val(1);	level = 1; }
+	if (level > affection_cap) 	{ input.val(affection_cap); level = affection_cap; }
+
+	//Flip element to active state on level change
+	if (element.hasClass("inactive")) element.addClass('active').removeClass('inactive');
+
+	affectionChartLevel(type, level);
+}
+
+
+function affectionChartToggle (element){
+	var type = element.attr('data-affection-type');
+
+	(element.hasClass("inactive")) ? element.addClass('active').removeClass('inactive') : element.addClass('inactive').removeClass('active');
+
+	affectionChartLevel(type, element.hasClass("inactive") ? 1 : $(".stattable-controls .affection-"+type+" input").val());
+}
+
+
+// Every row's affection level: of its own table (main), or of its other versions' (alt)
+function affectionChartLevel (type, level){
+	Object.keys(statCalc).forEach(function (id){
+		if (type == 'main') statCalc[id].affection.main_level = level;
+		else for (var i = 0; i < statCalc[id].affection.alt_level.length; i++) statCalc[id].affection.alt_level[i] = level;
+	});
+}
+/* Character stat chart - end */
+
+/* Character affection table - start */
+const affection_start = 50;
+const affection_cap = 50;
+
+var affection_data = {};
+var affectionTableCounter = 0;
+
+
+function initAffectionTable(){
+	$(".character-affectiontable").each(function(){
+		var id = ++affectionTableCounter;
+        if ($(this).parent().attr('data-character-id') !== undefined) id = $(this).parent().attr('data-character-id');
+		$(this).attr('id', 'affectionTable-'+id);
+		$(this).attr('data-character-id', id);
+
+		var data = {};
+
+		$(this).find(".affection-data > div").each(function(){
+			var level = $(this).attr('data-level');
+			data[level] = {};
+			var bonus = $(this).attr('data-stats').split(' ');
+
+			$.each( bonus, function( index ) {
+				bonus[index] = bonus[index].split('+');
+				data[level][bonus[index][0]] =  parseInt(bonus[index][1]);
+			});
+		});
+		affection_data[id] = data;
+
+		$(this).find(".affection-level").html('<input type="number" value="'+affection_start+'" step="1" min="1" max="'+affection_cap+'" />');
+		$(this).find(".affection-level input").on("input change", function(event){var table = $(this).closest("table"); affectionChange(table, inputNumber($(this), 1, affection_cap, affection_data[table.attr('data-character-id')].level, event.type == 'change'));});
+		$(this).find(".affection-data").children("div").on("click", function(){$(this).closest("table").find(".affection-level input").val($(this).attr('data-level')); affectionChange($(this).closest("table"),$(this).attr('data-level'));});
+
+		affectionChange($(this), affection_start, false);
+	});
+}
+
+
+function affectionChange (affectionTable, level, call_statCalc){
+	call_statCalc = (typeof call_statCalc !== 'undefined') ? call_statCalc : true;
+
+	var html_out = '';
+
+	level = (typeof level !== 'undefined' && !isNaN(level)) ? level : 1 ;
+
+	if (level < 1) 	 			{ affectionTable.find(".affection-level input").val(1);	level = 1; }
+	if (level > affection_cap) 	{ affectionTable.find(".affection-level input").val(affection_cap); level = affection_cap; }
+
+	var effective_bonus = affectionGetBonus(affectionTable.attr('data-character-id'), level);
+
+	$.each( effective_bonus, function(stat_name, stat_value){
+		html_out += '<b>' + stat_name + '</b>' + ' +' + stat_value + ', ';
+	});
+
+	affection_data[affectionTable.attr('data-character-id')].current = effective_bonus;
+	affection_data[affectionTable.attr('data-character-id')].level = level;
+
+	affectionTable.find(".affection-total").html(html_out.substring(0,html_out.length-2));
+
+
+	//update StatCalc if present
+	if (call_statCalc && typeof statCalc !== 'undefined') {
+
+		var type = 'main';
+		if (affectionTable.attr('data-character-id') > 1) type = 'alt';
+
+		if (type == 'main') {
+			Object.keys(statCalc).forEach(function (id){
+				statCalc[id].affection['main_level'] = level;
+			});
+		}
+		else {
+			Object.keys(statCalc).forEach(function (id){
+				statCalc[id].affection.alt_level[statCalc[id].affection.alt_id.indexOf(affectionTable.attr('data-character-id'))] = level;
+			});
+		}
+
+		affectionRecalc();
+		statTablesRecalc();
+	}
+}
+
+
+function affectionGetBonus (id, level) {
+	var effective_bonus = {};
+
+	for (var index = 2; index <= level; index++) {
+		$.each( affection_data[id][index], function(stat_name, stat_value){
+			if (typeof effective_bonus[stat_name] == 'undefined') effective_bonus[stat_name] = 0;
+			effective_bonus[stat_name] += stat_value;
+		});
+	}
+
+	return effective_bonus;
+}
+
+
+// The stat tables' affection: each takes its own table (main) and its other versions' (alt)
+function initAffectionLink() {
+	Object.keys(statCalc).forEach(function (id){
+		affectionMainLink(id);
+		affectionAltLink(id);
+	});
+
+	affectionRecalc();
+	statTablesRecalc();
+}
+
+
+function affectionMainLink(id) {
+	if (typeof affection_data[id] !== 'undefined') {
+		statCalc[id].affection.main_id.push(id);
+	}
+	else if (typeof affection_data[1] !== 'undefined') {
+		statCalc[id].affection.main_id.push(1);
+	}
+	else if (typeof statCalc[id].character_name !== 'undefined') {
+		// A form without a table of its own has its version's: Hoshino (Battle) Attacker, Hoshino (Battle)'s
+		var version = affectionFormOf(statCalc[id].character_name);
+		Object.keys(statCalc).forEach(function (element){
+			if (statCalc[element].character_name === version && typeof affection_data[element] !== 'undefined') statCalc[id].affection.main_id.push(element);
+		});
+	}
+
+	statCalc[id].affection.main_level = affection_start;
+}
+
+
+function affectionAltLink(id) {
+	if (typeof statCalc[id].character_name !== 'undefined') {
+		var name_normalized = affectionBaseName(statCalc[id].character_name);
+
+		Object.keys(statCalc).forEach(function (element){
+			if (id !== element && statCalc[id].affection.main_id.indexOf(element) < 0 && name_normalized == affectionBaseName(statCalc[element].character_name)) {
+				statCalc[id].affection.alt_id.push(element);
+				statCalc[id].affection.alt_level.push(affection_start);
+			}
+		});
+	}
+
+	if (typeof statCalc[id].character_name == 'undefined' && typeof affection_data[2] !== 'undefined') {
+		Object.keys(affection_data).forEach(function (element){
+			if (element > 1) {
+				statCalc[id].affection.alt_id.push(element);
+				statCalc[id].affection.alt_level.push(affection_start);
+			}
+		});
+	}
+}
+
+
+// The name a character's versions share: Shiroko for Shiroko (Riding), Hoshino for Hoshino (Battle) Attacker
+function affectionBaseName(name) {
+	return String(name).split(' (')[0];
+}
+
+// The version a form belongs to: Hoshino (Battle) for Hoshino (Battle) Attacker; null when the name isn't a form's
+function affectionFormOf(name) {
+	var match = /^(.*\)) [^()]+$/.exec(name);
+	return match ? match[1] : null;
+}
+
+
+function affectionRecalc(){
+
+	Object.keys(statCalc).forEach(function (id){
+		stats_list.forEach(function (element){
+			statCalc[id].affection.bonus[element] = 0;
+			statCalc[id].affection.bonus[element+'%'] = 0;
+		});
+
+		for (var affectionTable of statCalc[id].affection.main_id) if (typeof affection_data[affectionTable] !== 'undefined') {
+			var bonus = affectionGetBonus(affectionTable, statCalc[id].affection.main_level);
+
+			Object.keys(bonus).forEach(function (statName){
+				statCalc[id].affection.bonus[statName.toLowerCase()] += bonus[statName];
+			});
+		}
+
+		for (var affectionTable of statCalc[id].affection.alt_id) if (typeof affection_data[affectionTable] !== 'undefined') {
+			var bonus = affectionGetBonus(affectionTable, statCalc[id].affection.alt_level[statCalc[id].affection.alt_id.indexOf(String(affectionTable))]);
+			Object.keys(bonus).forEach(function (statName){
+				statCalc[id].affection.bonus[statName.toLowerCase()] += bonus[statName];
+			});
+		}
+
+	});
+
+}
+/* Character affection table - end */
+
+/* Character potential table - start */
+const potential_start = 0;
+const potential_cap = 25;
+
+var potential_data = {};
+var potentialtableCounter = 0;
+
+
+function initPotentialTable(){
+	$(".character-potentialtable").each(function(){
+		var table = $(this);
+		var id = 'potentialtable-'+(++potentialtableCounter);
+		$(this).attr('id',id);
+
+		var data = {};
+
+		$(this).find(".level").each(function(){
+			var level = $(this).attr('data-level');
+			data[level] = {
+                            'attack': $(this).attr('data-stat-attack'),
+                            'hp': $(this).attr('data-stat-hp'),
+                            'healing': $(this).attr('data-stat-healing'),
+                        };
+
+		});
+		potential_data[id] = data;
+        potential_data[id].current = {};
+        potential_data[id].level = {};
+
+		$(this).find(".summary [class^='potential-level']").html('<input type="number" value="'+potential_start+'" step="1" min="0" max="'+potential_cap+'" />');
+		$.each(['attack', 'hp', 'healing'], function(index, stat_name){
+			table.find(".potential-level-"+stat_name+" input").on("input change", function(event){potentialChange(table, stat_name, inputNumber($(this), 0, potential_cap, potential_data[id].level[stat_name], event.type == 'change'));});
+		});
+		table.find(".level .stat").on("click", function(){table.find(".potential-level-"+$(this).attr('data-stat')+" input").val($(this).parent().attr('data-level')); potentialChange(table, $(this).attr('data-stat'), $(this).parent().attr('data-level'));});
+
+		potentialChange($(this), 'attack', potential_start);
+        potentialChange($(this), 'hp', potential_start);
+        potentialChange($(this), 'healing', potential_start);
+	});
+}
+
+
+function potentialChange (potentialtable, stat_name, level){
+	var effective_bonus = 0;
+    var display_bonus = 0;
+
+	level = (typeof level !== 'undefined' && !isNaN(level)) ? level : 0 ;
+
+	if (level < 0) 	 			{ potentialtable.find(".potential-level-"+stat_name+" input").val(0);	level = 0; }
+	if (level > potential_cap) 	{ potentialtable.find(".potential-level-"+stat_name+" input").val(potential_cap); level = potential_cap; }
+
+    effective_bonus = potential_data[potentialtable.attr('id')][level][stat_name];
+	potential_data[potentialtable.attr('id')].current[stat_name] = effective_bonus;
+	potential_data[potentialtable.attr('id')].level[stat_name] = level;
+
+    //if StatCalc is present, calculate actual bonus value instead of percentages
+    if (typeof statCalc['statTable-1'] !== 'undefined') {
+        display_bonus = Math.ceil(calcStat(statCalc['statTable-1'].stats.level, 1, stat_name, statCalc['statTable-1'].stats[stat_name+'_min'], statCalc['statTable-1'].stats[stat_name+'_max']) / 10000 * effective_bonus);
+    }
+    else display_bonus = effective_bonus/100 + '%';
+
+    potentialtable.find(".potential-bonus-"+stat_name).html('+'+display_bonus);
+
+	//update StatCalc if present
+	if (typeof statCalc['statTable-1'] !== 'undefined') {
+        statCalc['statTable-1'].potential.level[stat_name] = level;
+        statCalc['statTable-1'].potential.bonus[stat_name] = display_bonus;
+		statTableRecalc($(".character-stattable"));
+	}
+}
+/* Character potential table - end */
+
+/* StatCalc init - start */
+// The parts start in turn once the page is ready, each on its own: one that fails doesn't stop the others
+$( document ).ready(function() {
+	[initAffectionTable, initStatCalc, initStatChart, initAffectionLink, initPotentialTable].forEach(function (init){
+		try { init(); }
+		catch (error) { setTimeout(function(){ throw error; }); }
+	});
+});
+/* StatCalc init - end */

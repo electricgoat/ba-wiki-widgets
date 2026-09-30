@@ -5,22 +5,13 @@ const potential_cap = 25;
 var potential_data = {};
 var potentialtableCounter = 0;
 
-	
-$( document ).ready(function() {
-	initPotentialTable();
-	$(".potential-level-attack input").on("input change", function(event){var table = $(this).closest("table"); potentialChange(table, 'attack', inputNumber($(this), 0, potential_cap, potential_data[table.attr('id')].level.attack, event.type == 'change'));});
-    $(".potential-level-hp input").on("input change", function(event){var table = $(this).closest("table"); potentialChange(table, 'hp', inputNumber($(this), 0, potential_cap, potential_data[table.attr('id')].level.hp, event.type == 'change'));});
-    $(".potential-level-healing input").on("input change", function(event){var table = $(this).closest("table"); potentialChange(table, 'healing', inputNumber($(this), 0, potential_cap, potential_data[table.attr('id')].level.healing, event.type == 'change'));});
-
-	$(".character-potentialtable .level .stat").on("click", function(){$(this).closest("table").find(".potential-level-"+$(this).attr('data-stat')+" input").val($(this).parent().attr('data-level')); potentialChange($(this).closest("table"), $(this).attr('data-stat'), $(this).parent().attr('data-level'));});
-});
-	
 
 function initPotentialTable(){
 	$(".character-potentialtable").each(function(){
+		var table = $(this);
 		var id = 'potentialtable-'+(++potentialtableCounter);
 		$(this).attr('id',id);
-		
+
 		var data = {};
 
 		$(this).find(".level").each(function(){
@@ -30,31 +21,31 @@ function initPotentialTable(){
                             'hp': $(this).attr('data-stat-hp'),
                             'healing': $(this).attr('data-stat-healing'),
                         };
-			
+
 		});
 		potential_data[id] = data;
         potential_data[id].current = {};
         potential_data[id].level = {};
 
-		$(this).find(".summary [class^='potential-level']").html('<input type="number" value="'+potential_start+'" step="1" min="0" max="'+potential_cap+'" />'); 
-		
+		$(this).find(".summary [class^='potential-level']").html('<input type="number" value="'+potential_start+'" step="1" min="0" max="'+potential_cap+'" />');
+		$.each(['attack', 'hp', 'healing'], function(index, stat_name){
+			table.find(".potential-level-"+stat_name+" input").on("input change", function(event){potentialChange(table, stat_name, inputNumber($(this), 0, potential_cap, potential_data[id].level[stat_name], event.type == 'change'));});
+		});
+		table.find(".level .stat").on("click", function(){table.find(".potential-level-"+$(this).attr('data-stat')+" input").val($(this).parent().attr('data-level')); potentialChange(table, $(this).attr('data-stat'), $(this).parent().attr('data-level'));});
+
 		potentialChange($(this), 'attack', potential_start);
         potentialChange($(this), 'hp', potential_start);
         potentialChange($(this), 'healing', potential_start);
-		// if (typeof affection !== 'undefined') {
-		// 	affectionGet($(".character-stattable"));
-		// 	statTableRecalc($(".character-stattable"));
-		// }
 	});
 }
-	
+
 
 function potentialChange (potentialtable, stat_name, level){
 	var effective_bonus = 0;
     var display_bonus = 0;
 
 	level = (typeof level !== 'undefined' && !isNaN(level)) ? level : 0 ;
-	
+
 	if (level < 0) 	 			{ potentialtable.find(".potential-level-"+stat_name+" input").val(0);	level = 0; }
 	if (level > potential_cap) 	{ potentialtable.find(".potential-level-"+stat_name+" input").val(potential_cap); level = potential_cap; }
 
@@ -67,7 +58,7 @@ function potentialChange (potentialtable, stat_name, level){
         display_bonus = Math.ceil(calcStat(statCalc['statTable-1'].stats.level, 1, stat_name, statCalc['statTable-1'].stats[stat_name+'_min'], statCalc['statTable-1'].stats[stat_name+'_max']) / 10000 * effective_bonus);
     }
     else display_bonus = effective_bonus/100 + '%';
-    
+
     potentialtable.find(".potential-bonus-"+stat_name).html('+'+display_bonus);
 
 	//update StatCalc if present
