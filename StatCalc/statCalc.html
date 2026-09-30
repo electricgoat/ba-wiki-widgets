@@ -1,0 +1,460 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Stat calc</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="calc.js"></script>
+	<script type="text/javascript" src="affection.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<br>
+
+
+	<table class="wikitable character-stattable" data-source="raw" data-character_id="20000">
+		<caption>Stats
+		</caption>
+		<tbody>
+			<tr class="stattable-controls" style="display: none">
+				<td colspan="8"><span class="stattable-rarity-selector">
+					<span class="star-character"><img alt="Icon star.png" src="https://static.miraheze.org/bluearchivewiki/thumb/8/86/Icon_star.png/20px-Icon_star.png" decoding="async" width="20" height="19" srcset="https://static.miraheze.org/bluearchivewiki/thumb/8/86/Icon_star.png/30px-Icon_star.png 1.5x, https://static.miraheze.org/bluearchivewiki/thumb/8/86/Icon_star.png/40px-Icon_star.png 2x" /></span>
+					<span class="star-weapon"><img alt="Icon blue star.png" src="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/20px-Icon_blue_star.png" decoding="async" width="20" height="19" srcset="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/30px-Icon_blue_star.png 1.5x, https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/40px-Icon_blue_star.png 2x" /></span></span>
+				</td>
+			</tr>
+			<tr class="stattable-stats">
+				<th>Attack
+				</th>
+				<td class="stat-attack">189/1894
+				</td>
+				<th>Defense
+				</th>
+				<td class="stat-defense">19/118
+				</td>
+				<th>HP
+				</th>
+				<td class="stat-hp">2228/22280
+				</td>
+				<th>Healing
+				</th>
+				<td class="stat-healing">1413/4240
+				</td>
+			</tr>
+			<tr class="stattable-stats">
+				<th>Accuracy
+				</th>
+				<td class="stat-accuracy">706
+				</td>
+				<th>Evasion
+				</th>
+				<td class="stat-evasion">792
+				</td>
+				<th>Critical Rate
+				</th>
+				<td class="stat-crit_rate">201
+				</td>
+				<th>Critical Damage
+				</th>
+				<td class="stat-crit_damage">200%
+				</td>
+			</tr>
+			<tr class="stattable-stats">
+				<th>Stability
+				</th>
+				<td class="stat-stability">1384
+				</td>
+				<th>Firing Range
+				</th>
+				<td class="stat-range">650
+				</td>
+				<th>CC Strength
+				</th>
+				<td class="stat-cc_str">100
+				</td>
+				<th>CC Resistance
+				</th>
+				<td class="stat-cc_res">100
+				</td>
+			</tr>
+			<tr class="stattable-stats">
+				<th>Attack Speed
+				</th>
+				<td class="stat-attack_speed">10000
+				</td>
+				<th>Movement Speed
+				</th>
+				<td class="stat-move_speed">200
+				</td>
+				<th>Cost Recovery
+				</th>
+				<td class="stat-regen_cost">700
+				</td>
+				<th>Ammo
+				</th>
+				<td class="stat-ammo">8/1
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<table class="character-equipment">
+		<tbody>
+			<tr>
+				<td class="weapon">
+					<div class="weapon-text"><span title="Cover"><img alt="Uses cover"
+								src="https://static.miraheze.org/bluearchivewiki/thumb/2/27/Icon_Cover.png/18px-Icon_Cover.png"
+								decoding="async" title="Uses cover" width="18" height="22"
+								srcset="https://static.miraheze.org/bluearchivewiki/thumb/2/27/Icon_Cover.png/27px-Icon_Cover.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/2/27/Icon_Cover.png/36px-Icon_Cover.png 2x"></span>AR
+					</div>
+					<div class="center">
+						<div class="floatnone"><img alt="AR"
+								src="https://static.miraheze.org/bluearchivewiki/thumb/c/ce/Weapon_Icon_AR.png/120px-Weapon_Icon_AR.png"
+								decoding="async" title="AR" width="120" height="57"
+								srcset="https://static.miraheze.org/bluearchivewiki/thumb/c/ce/Weapon_Icon_AR.png/180px-Weapon_Icon_AR.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/c/ce/Weapon_Icon_AR.png/240px-Weapon_Icon_AR.png 2x">
+						</div>
+					</div>
+				</td>
+				<td class="equipment equipment-1" data-value="gloves"><span title="Equipment_Icon_Gloves_Tier1"><a
+							href="/wiki/Equipment#Gloves" title="Gloves"><img alt="Gloves"
+								src="https://static.miraheze.org/bluearchivewiki/thumb/c/c4/Equipment_Icon_Gloves_Tier1.png/62px-Equipment_Icon_Gloves_Tier1.png"
+								decoding="async" width="62" height="49"
+								srcset="https://static.miraheze.org/bluearchivewiki/thumb/c/c4/Equipment_Icon_Gloves_Tier1.png/93px-Equipment_Icon_Gloves_Tier1.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/c/c4/Equipment_Icon_Gloves_Tier1.png/124px-Equipment_Icon_Gloves_Tier1.png 2x"></a></span>
+				</td>
+				<td class="equipment equipment-2" data-value="hairpin"><span title="Equipment_Icon_Hairpin_Tier1"><a
+							href="/wiki/Equipment#Hairpin" title="Hairpin"><img alt="Hairpin"
+								src="https://static.miraheze.org/bluearchivewiki/thumb/1/1b/Equipment_Icon_Hairpin_Tier1.png/62px-Equipment_Icon_Hairpin_Tier1.png"
+								decoding="async" width="62" height="49"
+								srcset="https://static.miraheze.org/bluearchivewiki/thumb/1/1b/Equipment_Icon_Hairpin_Tier1.png/93px-Equipment_Icon_Hairpin_Tier1.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/1/1b/Equipment_Icon_Hairpin_Tier1.png/124px-Equipment_Icon_Hairpin_Tier1.png 2x"></a></span>
+				</td>
+				<td class="equipment equipment-3" data-value="watch"><span title="Equipment_Icon_Watch_Tier1"><a
+							href="/wiki/Equipment#Watch" title="Watch"><img alt="Watch"
+								src="https://static.miraheze.org/bluearchivewiki/thumb/c/c5/Equipment_Icon_Watch_Tier1.png/62px-Equipment_Icon_Watch_Tier1.png"
+								decoding="async" width="62" height="49"
+								srcset="https://static.miraheze.org/bluearchivewiki/thumb/c/c5/Equipment_Icon_Watch_Tier1.png/93px-Equipment_Icon_Watch_Tier1.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/c/c5/Equipment_Icon_Watch_Tier1.png/124px-Equipment_Icon_Watch_Tier1.png 2x"></a></span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="wikitable weapontable" data-attack-val1="83" data-attack-val100="832" data-hp-val1="641"
+		data-hp-val100="6407">
+		<tbody>
+			<tr class="weapontable-summary">
+				<td colspan="7"><a href="/wiki/File:Weapon_Icon_10019.png" class="image"><img
+							alt="Weapon Icon 10019.png"
+							src="https://static.miraheze.org/bluearchivewiki/3/3a/Weapon_Icon_10019.png" decoding="async"
+							width="958" height="246"></a>
+					<p> <span class="weapon-name-main">Et Omnia Vanitas</span><span class="weapon-name-sub">Et Omnia
+							Vanitas</span>
+					</p>
+					<div class="weapon-description">
+						<div class="tabber tabber--live">
+							<header class="tabber__header"><noscript>Tabber requires Javascript to function.</noscript>
+								<div class="tabber__header__prev"></div>
+								<nav class="tabber__tabs" role="tablist"><a class="tabber__tab tabber__tab--active"
+										title="English" role="tab" href="#English-2" id="tab-English-2"
+										aria-selected="true" aria-controls="English-2">English</a><a class="tabber__tab"
+										title="Japanese" role="tab" href="#Japanese-2" id="tab-Japanese-2"
+										aria-selected="false" aria-controls="Japanese-2">Japanese</a></nav>
+								<div class="tabber__header__next"></div>
+							</header>
+							<section class="tabber__section" style="height: 45px;">
+								<article class="tabber__panel tabber__panel--active" title="English" id="English-2"
+									role="tabpanel" aria-labelledby="tab-English-2" aria-hidden="false">The gun that
+									Azusa carries.<br>The text engraved on the gun reads "Everything is futile. No
+									matter how far you go, it's all in vain."
+									<p class="mw-empty-elt"> </p>
+								</article>
+								<article class="tabber__panel" title="Japanese" id="Japanese-2" role="tabpanel"
+									aria-labelledby="tab-Japanese-2" aria-hidden="true">
+									アズサが常にしっかりと持っている銃。<br>銃身には「全ては虚しい。どこまで行こうとも、全てはただ虚しいものだ」という文言が刻まれている。
+									<p class="mw-empty-elt"></p>
+								</article>
+							</section>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="7">Rank</th>
+			</tr>
+			<tr>
+				<td class="rarity"><img alt="Icon blue star.png"
+						src="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/20px-Icon_blue_star.png"
+						decoding="async" width="20" height="19"
+						srcset="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/30px-Icon_blue_star.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/40px-Icon_blue_star.png 2x"><img
+						alt="Icon blue star.png"
+						src="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/20px-Icon_blue_star.png"
+						decoding="async" width="20" height="19"
+						srcset="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/30px-Icon_blue_star.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/40px-Icon_blue_star.png 2x">
+				</td>
+				<td colspan="6">Passive Skill changes to "Rigorous training +"</td>
+			</tr>
+			<tr>
+				<td class="rarity"><img alt="Icon blue star.png"
+						src="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/20px-Icon_blue_star.png"
+						decoding="async" width="20" height="19"
+						srcset="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/30px-Icon_blue_star.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/40px-Icon_blue_star.png 2x"><img
+						alt="Icon blue star.png"
+						src="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/20px-Icon_blue_star.png"
+						decoding="async" width="20" height="19"
+						srcset="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/30px-Icon_blue_star.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/40px-Icon_blue_star.png 2x"><img
+						alt="Icon blue star.png"
+						src="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/20px-Icon_blue_star.png"
+						decoding="async" width="20" height="19"
+						srcset="https://static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/30px-Icon_blue_star.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/0/01/Icon_blue_star.png/40px-Icon_blue_star.png 2x">
+				</td>
+				<td colspan="6"><span title="Indoor"><img alt="Indoor"
+							src="https://static.miraheze.org/bluearchivewiki/thumb/c/c1/Icon_location_indoors.png/20px-Icon_location_indoors.png"
+							decoding="async" width="20" height="20"
+							srcset="https://static.miraheze.org/bluearchivewiki/thumb/c/c1/Icon_location_indoors.png/30px-Icon_location_indoors.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/c/c1/Icon_location_indoors.png/40px-Icon_location_indoors.png 2x"></span>
+					Indoor area affinity <a href="/wiki/Affinity" title="SS grade affinity"><img alt="SS"
+							src="https://static.miraheze.org/bluearchivewiki/thumb/3/3b/Icon_mood_ss.png/20px-Icon_mood_ss.png"
+							decoding="async" width="20" height="20" style="vertical-align: middle" class="affinity-icon"
+							srcset="https://static.miraheze.org/bluearchivewiki/thumb/3/3b/Icon_mood_ss.png/30px-Icon_mood_ss.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/3/3b/Icon_mood_ss.png/40px-Icon_mood_ss.png 2x"></a>
+					SS</td>
+			</tr>
+			<tr>
+				<th colspan="7">Stats</th>
+			</tr>
+			<tr>
+				<th></th>
+				<th>Level 1</th>
+				<th title="Maximum level at rank 1">Level 30</th>
+				<th title="Maximum level at rank 2">Level 40</th>
+				<th title="Maximum level at rank 3">Level 50</th>
+				<th class="tbd" title="Currently not attainable in the game">Level 60</th>
+				<th class="tbd" title="Currently not attainable in the game">Level 70</th>
+			</tr>
+			<tr class="data-row">
+				<th>Attack</th>
+				<td>83</td>
+				<td>302</td>
+				<td>378</td>
+				<td>453</td>
+				<td class="tbd" title="Currently not attainable in the game">529</td>
+				<td class="tbd" title="Currently not attainable in the game">605</td>
+			</tr>
+			<tr class="data-row">
+				<th>HP</th>
+				<td>641</td>
+				<td>2330</td>
+				<td>2912</td>
+				<td>3494</td>
+				<td class="tbd" title="Currently not attainable in the game">4077</td>
+				<td class="tbd" title="Currently not attainable in the game">4659</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+
+	<table class="wikitable geartable" data-stat-t1="Attack Speed" data-stat-t1-value="150">
+		<tbody><tr class="geartable-summary">
+			<td colspan="7"><a href="/wiki/File:Gear_Icon_10000.png" class="image"><img alt="Gear Icon 10000.png" src="https://static.miraheze.org/bluearchivewiki/d/db/Gear_Icon_10000.png" decoding="async" width="304" height="240"></a>
+		<p>	<span class="gear-name-main">Aru's treasured wallet</span><span class="gear-name-sub">アルのすごく貴重な財布</span>
+		</p>
+			<div class="gear-description"><div class="tabber tabber--live"><header class="tabber__header"><noscript>Tabber requires Javascript to function.</noscript><div class="tabber__header__prev"></div><nav class="tabber__tabs" role="tablist"><a class="tabber__tab tabber__tab--active" role="tab" href="#English-3" id="tab-English-3" aria-selected="true" aria-controls="English-3">English</a><a class="tabber__tab" role="tab" href="#Japanese-3" id="tab-Japanese-3" aria-selected="false" aria-controls="Japanese-3">Japanese</a></nav><div class="tabber__header__next"></div></header><section class="tabber__section" style="height: 104px;"><article class="tabber__panel tabber__panel--active" title="English" id="English-3" role="tabpanel" aria-labelledby="tab-English-3" aria-hidden="false"><p>A luxury wallet that Aru loves.<br>It's a luxury item made of high quality materials, but it has faded and scratched here and there due to long use. Haruka, Kayoko, and Mutsuki pooled money together and presented this wallet as a gift to commemorate the beginnings of Handyman 68, which makes it an irreplaceable treasured posession for Aru.</p> 
+			</article><article class="tabber__panel" title="Japanese" id="Japanese-3" role="tabpanel" aria-labelledby="tab-Japanese-3" aria-hidden="true"><p>アルが愛用する高級財布。<br>質の良い素材で作られた高級品だが、長く使用したせいで色があせ、あちこちにキズがついている。初めて便利屋を立ち上げた後、ハルカ、カヨコ、ムツキが一緒にお金を集めてプレゼントしてくれたもので、アルにとってはかけがえのない大切なものである。</p>
+			</article></section></div></div>
+			</td>
+		</tr>
+		<tr>
+			<th colspan="7">Tier</th>
+		</tr>
+		<tr>
+			<td class="rarity">T1</td>
+			<td colspan="6">Increase Accuracy by <span style="color:#007eff; font-weight:bold">150</span></td>
+		</tr>
+		<tr>
+			<td class="rarity">T2</td>
+			<td colspan="6">Normal Skill changes to <b>Noir shoot +</b></td>
+		</tr>
+		</tbody></table>
+
+
+		<table class="mw-collapsible wikitable character-affectiontable mw-made-collapsible">
+
+			<tbody><tr class="summary">
+			<td><span class="mw-collapsible-toggle mw-collapsible-toggle-default mw-collapsible-toggle-expanded" role="button" tabindex="0" aria-expanded="true"><a class="mw-collapsible-text">Collapse</a></span><img alt="Affection rank bonus" src="https://static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/36px-Icon_affection.png" decoding="async" width="36" height="32" class="affection-icon" srcset="https://static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/54px-Icon_affection.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/72px-Icon_affection.png 2x">Total bonus at affection rank <span class="affection-level"><input type="number" value="50" step="1" min="1" max="50"></span>: <span class="affection-total"><b>Attack</b> +128, <b>HP</b> +1190</span>
+			</td></tr>
+			<tr style="">
+			<td class="affection-data">
+			<div data-level="2" data-stats="Attack+2"><span>2:</span> Attack+2</div>
+			<div data-level="3" data-stats="Attack+2"><span>3:</span> Attack+2</div>
+			<div data-level="4" data-stats="Attack+2"><span>4:</span> Attack+2</div>
+			<div data-level="5" data-stats="Attack+2"><span>5:</span> Attack+2<span class="affection-rewards"><img alt="Memorial lobby unlocks at this rank" src="https://static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/20px-Icon_memorial_lobby.png" decoding="async" title="Memorial lobby unlocks at this rank" width="20" height="16" class="rewards-icon" srcset="https://static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/30px-Icon_memorial_lobby.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/40px-Icon_memorial_lobby.png 2x"></span></div>
+			<div data-level="6" data-stats="Attack+3"><span>6:</span> Attack+3</div>
+			<div data-level="7" data-stats="Attack+3"><span>7:</span> Attack+3</div>
+			<div data-level="8" data-stats="Attack+3"><span>8:</span> Attack+3</div>
+			<div data-level="9" data-stats="Attack+3"><span>9:</span> Attack+3</div>
+			<div data-level="10" data-stats="Attack+3"><span>10:</span> Attack+3</div>
+			<div data-level="11" data-stats="Attack+4 HP+55"><span>11:</span> Attack+4 HP+55</div>
+			<div data-level="12" data-stats="Attack+4 HP+55"><span>12:</span> Attack+4 HP+55</div>
+			<div data-level="13" data-stats="Attack+4 HP+55"><span>13:</span> Attack+4 HP+55</div>
+			<div data-level="14" data-stats="Attack+4 HP+55"><span>14:</span> Attack+4 HP+55</div>
+			<div data-level="15" data-stats="Attack+4 HP+55"><span>15:</span> Attack+4 HP+55</div>
+			<div data-level="16" data-stats="Attack+5 HP+67"><span>16:</span> Attack+5 HP+67</div>
+			<div data-level="17" data-stats="Attack+5 HP+67"><span>17:</span> Attack+5 HP+67</div>
+			<div data-level="18" data-stats="Attack+5 HP+67"><span>18:</span> Attack+5 HP+67</div>
+			<div data-level="19" data-stats="Attack+5 HP+67"><span>19:</span> Attack+5 HP+67</div>
+			<div data-level="20" data-stats="Attack+5 HP+67"><span>20:</span> Attack+5 HP+67</div>
+			<div data-level="21" data-stats="Attack+1 HP+12"><span>21:</span> Attack+1 HP+12</div>
+			<div data-level="22" data-stats="Attack+1 HP+12"><span>22:</span> Attack+1 HP+12</div>
+			<div data-level="23" data-stats="Attack+1 HP+12"><span>23:</span> Attack+1 HP+12</div>
+			<div data-level="24" data-stats="Attack+1 HP+12"><span>24:</span> Attack+1 HP+12</div>
+			<div data-level="25" data-stats="Attack+1 HP+12"><span>25:</span> Attack+1 HP+12</div>
+			<div data-level="26" data-stats="Attack+1 HP+12"><span>26:</span> Attack+1 HP+12</div>
+			<div data-level="27" data-stats="Attack+1 HP+12"><span>27:</span> Attack+1 HP+12</div>
+			<div data-level="28" data-stats="Attack+1 HP+12"><span>28:</span> Attack+1 HP+12</div>
+			<div data-level="29" data-stats="Attack+1 HP+12"><span>29:</span> Attack+1 HP+12</div>
+			<div data-level="30" data-stats="Attack+1 HP+12"><span>30:</span> Attack+1 HP+12</div>
+			<div data-level="31" data-stats="Attack+2 HP+17"><span>31:</span> Attack+2 HP+17</div>
+			<div data-level="32" data-stats="Attack+2 HP+17"><span>32:</span> Attack+2 HP+17</div>
+			<div data-level="33" data-stats="Attack+2 HP+17"><span>33:</span> Attack+2 HP+17</div>
+			<div data-level="34" data-stats="Attack+2 HP+17"><span>34:</span> Attack+2 HP+17</div>
+			<div data-level="35" data-stats="Attack+2 HP+17"><span>35:</span> Attack+2 HP+17</div>
+			<div data-level="36" data-stats="Attack+2 HP+17"><span>36:</span> Attack+2 HP+17</div>
+			<div data-level="37" data-stats="Attack+2 HP+17"><span>37:</span> Attack+2 HP+17</div>
+			<div data-level="38" data-stats="Attack+2 HP+17"><span>38:</span> Attack+2 HP+17</div>
+			<div data-level="39" data-stats="Attack+2 HP+17"><span>39:</span> Attack+2 HP+17</div>
+			<div data-level="40" data-stats="Attack+2 HP+17"><span>40:</span> Attack+2 HP+17</div>
+			<div data-level="41" data-stats="Attack+3 HP+29"><span>41:</span> Attack+3 HP+29</div>
+			<div data-level="42" data-stats="Attack+3 HP+29"><span>42:</span> Attack+3 HP+29</div>
+			<div data-level="43" data-stats="Attack+3 HP+29"><span>43:</span> Attack+3 HP+29</div>
+			<div data-level="44" data-stats="Attack+3 HP+29"><span>44:</span> Attack+3 HP+29</div>
+			<div data-level="45" data-stats="Attack+3 HP+29"><span>45:</span> Attack+3 HP+29</div>
+			<div data-level="46" data-stats="Attack+3 HP+29"><span>46:</span> Attack+3 HP+29</div>
+			<div data-level="47" data-stats="Attack+3 HP+29"><span>47:</span> Attack+3 HP+29</div>
+			<div data-level="48" data-stats="Attack+3 HP+29"><span>48:</span> Attack+3 HP+29</div>
+			<div data-level="49" data-stats="Attack+3 HP+29"><span>49:</span> Attack+3 HP+29</div>
+			<div data-level="50" data-stats="Attack+3 HP+29"><span>50:</span> Attack+3 HP+29</div>
+			</td></tr></tbody></table>	
+
+
+	<table class="mw-collapsible wikitable character-affectiontable mw-made-collapsible">
+
+				<tbody><tr class="summary">
+				<td><span class="mw-collapsible-toggle mw-collapsible-toggle-default mw-collapsible-toggle-expanded" role="button" tabindex="0" aria-expanded="true"><a class="mw-collapsible-text">Collapse</a></span><img alt="Affection rank bonus" src="https://static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/36px-Icon_affection.png" decoding="async" width="36" height="32" class="affection-icon" srcset="https://static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/54px-Icon_affection.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/72px-Icon_affection.png 2x">Total bonus at affection rank <span class="affection-level"><input type="number" value="50" step="1" min="1" max="50"></span>: <span class="affection-total"><b>Attack</b> +128, <b>HP</b> +1190</span>
+				</td></tr>
+				<tr style="">
+				<td class="affection-data">
+				<div data-level="2" data-stats="Attack+2"><span>2:</span> Attack+2</div>
+				<div data-level="3" data-stats="Attack+2"><span>3:</span> Attack+2</div>
+				<div data-level="4" data-stats="Attack+2"><span>4:</span> Attack+2</div>
+				<div data-level="5" data-stats="Attack+2"><span>5:</span> Attack+2<span class="affection-rewards"><img alt="Memorial lobby unlocks at this rank" src="https://static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/20px-Icon_memorial_lobby.png" decoding="async" title="Memorial lobby unlocks at this rank" width="20" height="16" class="rewards-icon" srcset="https://static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/30px-Icon_memorial_lobby.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/40px-Icon_memorial_lobby.png 2x"></span></div>
+				<div data-level="6" data-stats="Attack+3"><span>6:</span> Attack+3</div>
+				<div data-level="7" data-stats="Attack+3"><span>7:</span> Attack+3</div>
+				<div data-level="8" data-stats="Attack+3"><span>8:</span> Attack+3</div>
+				<div data-level="9" data-stats="Attack+3"><span>9:</span> Attack+3</div>
+				<div data-level="10" data-stats="Attack+3"><span>10:</span> Attack+3</div>
+				<div data-level="11" data-stats="Attack+4 HP+55"><span>11:</span> Attack+4 HP+55</div>
+				<div data-level="12" data-stats="Attack+4 HP+55"><span>12:</span> Attack+4 HP+55</div>
+				<div data-level="13" data-stats="Attack+4 HP+55"><span>13:</span> Attack+4 HP+55</div>
+				<div data-level="14" data-stats="Attack+4 HP+55"><span>14:</span> Attack+4 HP+55</div>
+				<div data-level="15" data-stats="Attack+4 HP+55"><span>15:</span> Attack+4 HP+55</div>
+				<div data-level="16" data-stats="Attack+5 HP+67"><span>16:</span> Attack+5 HP+67</div>
+				<div data-level="17" data-stats="Attack+5 HP+67"><span>17:</span> Attack+5 HP+67</div>
+				<div data-level="18" data-stats="Attack+5 HP+67"><span>18:</span> Attack+5 HP+67</div>
+				<div data-level="19" data-stats="Attack+5 HP+67"><span>19:</span> Attack+5 HP+67</div>
+				<div data-level="20" data-stats="Attack+5 HP+67"><span>20:</span> Attack+5 HP+67</div>
+				<div data-level="21" data-stats="Attack+1 HP+12"><span>21:</span> Attack+1 HP+12</div>
+				<div data-level="22" data-stats="Attack+1 HP+12"><span>22:</span> Attack+1 HP+12</div>
+				<div data-level="23" data-stats="Attack+1 HP+12"><span>23:</span> Attack+1 HP+12</div>
+				<div data-level="24" data-stats="Attack+1 HP+12"><span>24:</span> Attack+1 HP+12</div>
+				<div data-level="25" data-stats="Attack+1 HP+12"><span>25:</span> Attack+1 HP+12</div>
+				<div data-level="26" data-stats="Attack+1 HP+12"><span>26:</span> Attack+1 HP+12</div>
+				<div data-level="27" data-stats="Attack+1 HP+12"><span>27:</span> Attack+1 HP+12</div>
+				<div data-level="28" data-stats="Attack+1 HP+12"><span>28:</span> Attack+1 HP+12</div>
+				<div data-level="29" data-stats="Attack+1 HP+12"><span>29:</span> Attack+1 HP+12</div>
+				<div data-level="30" data-stats="Attack+1 HP+12"><span>30:</span> Attack+1 HP+12</div>
+				<div data-level="31" data-stats="Attack+2 HP+17"><span>31:</span> Attack+2 HP+17</div>
+				<div data-level="32" data-stats="Attack+2 HP+17"><span>32:</span> Attack+2 HP+17</div>
+				<div data-level="33" data-stats="Attack+2 HP+17"><span>33:</span> Attack+2 HP+17</div>
+				<div data-level="34" data-stats="Attack+2 HP+17"><span>34:</span> Attack+2 HP+17</div>
+				<div data-level="35" data-stats="Attack+2 HP+17"><span>35:</span> Attack+2 HP+17</div>
+				<div data-level="36" data-stats="Attack+2 HP+17"><span>36:</span> Attack+2 HP+17</div>
+				<div data-level="37" data-stats="Attack+2 HP+17"><span>37:</span> Attack+2 HP+17</div>
+				<div data-level="38" data-stats="Attack+2 HP+17"><span>38:</span> Attack+2 HP+17</div>
+				<div data-level="39" data-stats="Attack+2 HP+17"><span>39:</span> Attack+2 HP+17</div>
+				<div data-level="40" data-stats="Attack+2 HP+17"><span>40:</span> Attack+2 HP+17</div>
+				<div data-level="41" data-stats="Attack+3 HP+29"><span>41:</span> Attack+3 HP+29</div>
+				<div data-level="42" data-stats="Attack+3 HP+29"><span>42:</span> Attack+3 HP+29</div>
+				<div data-level="43" data-stats="Attack+3 HP+29"><span>43:</span> Attack+3 HP+29</div>
+				<div data-level="44" data-stats="Attack+3 HP+29"><span>44:</span> Attack+3 HP+29</div>
+				<div data-level="45" data-stats="Attack+3 HP+29"><span>45:</span> Attack+3 HP+29</div>
+				<div data-level="46" data-stats="Attack+3 HP+29"><span>46:</span> Attack+3 HP+29</div>
+				<div data-level="47" data-stats="Attack+3 HP+29"><span>47:</span> Attack+3 HP+29</div>
+				<div data-level="48" data-stats="Attack+3 HP+29"><span>48:</span> Attack+3 HP+29</div>
+				<div data-level="49" data-stats="Attack+3 HP+29"><span>49:</span> Attack+3 HP+29</div>
+				<div data-level="50" data-stats="Attack+3 HP+29"><span>50:</span> Attack+3 HP+29</div>
+				</td></tr></tbody></table>	
+
+
+
+
+				<table class="mw-collapsible wikitable character-affectiontable mw-made-collapsible">
+
+					<tbody><tr class="summary">
+					<td><span class="mw-collapsible-toggle mw-collapsible-toggle-default mw-collapsible-toggle-expanded" role="button" tabindex="0" aria-expanded="true"><a class="mw-collapsible-text">Collapse</a></span><img alt="Affection rank bonus" src="https://static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/36px-Icon_affection.png" decoding="async" width="36" height="32" class="affection-icon" srcset="https://static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/54px-Icon_affection.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/8/8c/Icon_affection.png/72px-Icon_affection.png 2x">Total bonus at affection rank <span class="affection-level"><input type="number" value="50" step="1" min="1" max="50"></span>: <span class="affection-total"><b>Attack</b> +128, <b>HP</b> +1190</span>
+					</td></tr>
+					<tr style="">
+					<td class="affection-data">
+					<div data-level="2" data-stats="Attack+2"><span>2:</span> Attack+2</div>
+					<div data-level="3" data-stats="Attack+2"><span>3:</span> Attack+2</div>
+					<div data-level="4" data-stats="Attack+2"><span>4:</span> Attack+2</div>
+					<div data-level="5" data-stats="Attack+2"><span>5:</span> Attack+2<span class="affection-rewards"><img alt="Memorial lobby unlocks at this rank" src="https://static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/20px-Icon_memorial_lobby.png" decoding="async" title="Memorial lobby unlocks at this rank" width="20" height="16" class="rewards-icon" srcset="https://static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/30px-Icon_memorial_lobby.png 1.5x, //static.miraheze.org/bluearchivewiki/thumb/5/5d/Icon_memorial_lobby.png/40px-Icon_memorial_lobby.png 2x"></span></div>
+					<div data-level="6" data-stats="Attack+3"><span>6:</span> Attack+3</div>
+					<div data-level="7" data-stats="Attack+3"><span>7:</span> Attack+3</div>
+					<div data-level="8" data-stats="Attack+3"><span>8:</span> Attack+3</div>
+					<div data-level="9" data-stats="Attack+3"><span>9:</span> Attack+3</div>
+					<div data-level="10" data-stats="Attack+3"><span>10:</span> Attack+3</div>
+					<div data-level="11" data-stats="Attack+4 HP+55"><span>11:</span> Attack+4 HP+55</div>
+					<div data-level="12" data-stats="Attack+4 HP+55"><span>12:</span> Attack+4 HP+55</div>
+					<div data-level="13" data-stats="Attack+4 HP+55"><span>13:</span> Attack+4 HP+55</div>
+					<div data-level="14" data-stats="Attack+4 HP+55"><span>14:</span> Attack+4 HP+55</div>
+					<div data-level="15" data-stats="Attack+4 HP+55"><span>15:</span> Attack+4 HP+55</div>
+					<div data-level="16" data-stats="Attack+5 HP+67"><span>16:</span> Attack+5 HP+67</div>
+					<div data-level="17" data-stats="Attack+5 HP+67"><span>17:</span> Attack+5 HP+67</div>
+					<div data-level="18" data-stats="Attack+5 HP+67"><span>18:</span> Attack+5 HP+67</div>
+					<div data-level="19" data-stats="Attack+5 HP+67"><span>19:</span> Attack+5 HP+67</div>
+					<div data-level="20" data-stats="Attack+5 HP+67"><span>20:</span> Attack+5 HP+67</div>
+					<div data-level="21" data-stats="Attack+1 HP+12"><span>21:</span> Attack+1 HP+12</div>
+					<div data-level="22" data-stats="Attack+1 HP+12"><span>22:</span> Attack+1 HP+12</div>
+					<div data-level="23" data-stats="Attack+1 HP+12"><span>23:</span> Attack+1 HP+12</div>
+					<div data-level="24" data-stats="Attack+1 HP+12"><span>24:</span> Attack+1 HP+12</div>
+					<div data-level="25" data-stats="Attack+1 HP+12"><span>25:</span> Attack+1 HP+12</div>
+					<div data-level="26" data-stats="Attack+1 HP+12"><span>26:</span> Attack+1 HP+12</div>
+					<div data-level="27" data-stats="Attack+1 HP+12"><span>27:</span> Attack+1 HP+12</div>
+					<div data-level="28" data-stats="Attack+1 HP+12"><span>28:</span> Attack+1 HP+12</div>
+					<div data-level="29" data-stats="Attack+1 HP+12"><span>29:</span> Attack+1 HP+12</div>
+					<div data-level="30" data-stats="Attack+1 HP+12"><span>30:</span> Attack+1 HP+12</div>
+					<div data-level="31" data-stats="Attack+2 HP+17"><span>31:</span> Attack+2 HP+17</div>
+					<div data-level="32" data-stats="Attack+2 HP+17"><span>32:</span> Attack+2 HP+17</div>
+					<div data-level="33" data-stats="Attack+2 HP+17"><span>33:</span> Attack+2 HP+17</div>
+					<div data-level="34" data-stats="Attack+2 HP+17"><span>34:</span> Attack+2 HP+17</div>
+					<div data-level="35" data-stats="Attack+2 HP+17"><span>35:</span> Attack+2 HP+17</div>
+					<div data-level="36" data-stats="Attack+2 HP+17"><span>36:</span> Attack+2 HP+17</div>
+					<div data-level="37" data-stats="Attack+2 HP+17"><span>37:</span> Attack+2 HP+17</div>
+					<div data-level="38" data-stats="Attack+2 HP+17"><span>38:</span> Attack+2 HP+17</div>
+					<div data-level="39" data-stats="Attack+2 HP+17"><span>39:</span> Attack+2 HP+17</div>
+					<div data-level="40" data-stats="Attack+2 HP+17"><span>40:</span> Attack+2 HP+17</div>
+					<div data-level="41" data-stats="Attack+3 HP+29"><span>41:</span> Attack+3 HP+29</div>
+					<div data-level="42" data-stats="Attack+3 HP+29"><span>42:</span> Attack+3 HP+29</div>
+					<div data-level="43" data-stats="Attack+3 HP+29"><span>43:</span> Attack+3 HP+29</div>
+					<div data-level="44" data-stats="Attack+3 HP+29"><span>44:</span> Attack+3 HP+29</div>
+					<div data-level="45" data-stats="Attack+3 HP+29"><span>45:</span> Attack+3 HP+29</div>
+					<div data-level="46" data-stats="Attack+3 HP+29"><span>46:</span> Attack+3 HP+29</div>
+					<div data-level="47" data-stats="Attack+3 HP+29"><span>47:</span> Attack+3 HP+29</div>
+					<div data-level="48" data-stats="Attack+3 HP+29"><span>48:</span> Attack+3 HP+29</div>
+					<div data-level="49" data-stats="Attack+3 HP+29"><span>49:</span> Attack+3 HP+29</div>
+					<div data-level="50" data-stats="Attack+3 HP+29"><span>50:</span> Attack+3 HP+29</div>
+					</td></tr></tbody></table>	
+			
+</body>
+
+</html>
