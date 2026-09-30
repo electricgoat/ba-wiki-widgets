@@ -24,6 +24,7 @@ const search_keywords = {
         'millennium': { group: 'school', value: 'millennium' },
         'red_winter': { group: 'school', value: 'red_winter' },
         'srt': { group: 'school', value: 'srt' },
+        'odyssey': { group: 'school', value: 'odyssey' },
         'etc': { group: 'school', value: 'etc' },
 
         'ar': { group: 'weapon', value: 'ar' },
@@ -63,11 +64,15 @@ const search_keywords = {
         'yellow': { group: 'attack', value: 'penetration' },
         'sonic': { group: 'attack', value: 'sonic' },
         'purple': { group: 'attack', value: 'sonic' },
+        'chemical': { group: 'attack', value: 'corrosive' },
+        'corrosive': { group: 'attack', value: 'corrosive' },
+        'green': { group: 'attack', value: 'corrosive' },
 
         'light': { group: 'armor', value: 'light' },
         'heavy': { group: 'armor', value: 'heavy' },
         'specialarmor': { group: 'armor', value: 'special' },
         'elastic': { group: 'armor', value: 'elastic' },
+        'composite': { group: 'armor', value: 'composite' },
 
         // Text search keywords
         'ᓀ‸ᓂ': { text: '"azusa"' },
