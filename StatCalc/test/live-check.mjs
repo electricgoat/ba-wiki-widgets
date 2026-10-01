@@ -1,15 +1,17 @@
-// StatCalc as built (dist/StatCalc.js) against a baseline on live pages in each skin, read-only: the page's request for
-// MediaWiki:StatCalc.js is answered with each script in turn, the same actions are played on both (clicks, typing, sorting,
-// filtering), and everything they show is compared. The baseline is the live page's current revision unless --baseline
-// names a file. Needs Chrome or Edge (STATCALC_TEST_BROWSER names another Chromium executable) and the network.
-// Run from the repository root: node StatCalc/test/live-check.mjs [--baseline file] [--candidate file] [filter ...]
-// A filter keeps the runs whose "page/skin" contains it (Shiroko, minerva, StatChart/vector). Exits 1 when anything differs
-// or the candidate throws.
+// StatCalc as built (dist/StatCalc.js) against a baseline on live pages in each skin, read-only: the page gets each script in
+// turn, swapped for the gadget's code in its ResourceLoader response, the same actions are played on both (clicks, typing,
+// sorting, filtering), and everything they show is compared. The baseline is the live script's current revision unless
+// --baseline names a file; the candidate is dist/StatCalc.js unless --candidate names a file, or is "served": whatever the
+// wiki serves, untouched, to check a deploy. Needs Chrome or Edge (STATCALC_TEST_BROWSER names another Chromium executable)
+// and the network.
+// Run from the repository root: node StatCalc/test/live-check.mjs [--baseline file] [--candidate file|served] [filter ...]
+// A filter keeps the runs whose "page/skin" contains it (Shiroko, minerva, StatChart/vector). Exits 1 when anything differs,
+// the candidate throws or a page doesn't load the gadget.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { output } from '../build.mjs';
+import { output, livePage } from '../build.mjs';
 
 const args = process.argv.slice(2);
 const option = name => { const i = args.indexOf(name); return i < 0 ? null : args.splice(i, 2)[1]; };
@@ -33,12 +35,23 @@ const runs = pages.flatMap(page => skins.map(skin => ({page, skin}))).filter(run
 
 let baseline, baselineName;
 if (baselineFile) { baseline = fs.readFileSync(baselineFile, 'utf8'); baselineName = baselineFile; }
-else {
-    const api = 'https://bluearchive.wiki/w/api.php?action=query&format=json&formatversion=2&prop=revisions&rvprop=ids|content&rvslots=main&titles=MediaWiki:StatCalc.js';
-    const revision = (await (await fetch(api, {headers})).json()).query.pages[0].revisions[0];
-    baseline = revision.slots.main.content; baselineName = `MediaWiki:StatCalc.js revision ${revision.revid}`;
+else { const page = await livePage(); baseline = page.content; baselineName = `${page.title} revision ${page.revid}`; }
+const served = candidateFile == 'served';
+const scripts = {baseline, candidate: served ? null : fs.readFileSync(candidateFile, 'utf8')};
+// An error is StatCalc's when it comes from the page it's loaded from, or from one of its functions: as a gadget, its code
+// shares a ResourceLoader response with other gadgets
+const functions = [...new Set([...(baseline + (scripts.candidate || '')).matchAll(/function\s+(\w+)/g)].map(m => m[1]))];
+const ours = new RegExp(`MediaWiki:(Gadget-)?StatCalc\\.js|at (${functions.join('|')}) `);
+
+// The gadget's code in a ResourceLoader response, which holds each module as
+// mw.loader.impl(function(){return["ext.gadget.StatCalc@…",function($,jQuery,require,module){…}];});
+function swapGadget(body, script) {
+    const start = body.indexOf('mw.loader.impl(function(){return["ext.gadget.StatCalc@');
+    if (start < 0) return null;
+    const open = 'function($,jQuery,require,module){', from = body.indexOf(open, start) + open.length;
+    const next = body.indexOf('\nmw.loader.impl(', start), end = body.lastIndexOf('}];});', next < 0 ? body.length : next);
+    return body.slice(0, from) + '\n' + script + '\n' + body.slice(end);
 }
-const scripts = {baseline, candidate: fs.readFileSync(candidateFile, 'utf8')};
 
 // Helpers the actions use in the page
 const helpers = `(() => {
@@ -86,7 +99,7 @@ const endpoint = await new Promise((resolve, reject) => {
 });
 const ws = new WebSocket(endpoint);
 await new Promise(resolve => ws.addEventListener('open', resolve, {once: true}));
-let nextId = 0, sessionId, loaded = false, serving;
+let nextId = 0, sessionId, loaded = false, serving, raw = false;
 const pending = new Map(), exceptions = [];
 const send = (method, params = {}, session = sessionId) => new Promise((resolve, reject) => {
     const id = ++nextId; pending.set(id, {resolve, reject});
@@ -95,15 +108,24 @@ const send = (method, params = {}, session = sessionId) => new Promise((resolve,
 ws.addEventListener('message', event => {
     const message = JSON.parse(event.data);
     if (message.method == 'Page.loadEventFired') loaded = true;
+    if (message.method == 'Network.requestWillBeSent' && /MediaWiki(:|%3A)StatCalc\.js/i.test(message.params.request.url)) raw = true;
     if (message.method == 'Runtime.exceptionThrown') {
         const d = message.params.exceptionDetails, description = d.exception?.description || d.text;
-        exceptions.push({statcalc: /StatCalc\.js/.test(description + (d.url || '')), text: description.split('\n').slice(0, 2).map(l => l.trim()).join(' | ')});
+        exceptions.push({statcalc: ours.test(description + ' ' + (d.url || '')), text: description.split('\n').slice(0, 2).map(l => l.trim()).join(' | ')});
     }
-    if (message.method == 'Fetch.requestPaused') send('Fetch.fulfillRequest', {requestId: message.params.requestId, responseCode: 200,
-        responseHeaders: [{name: 'Content-Type', value: 'text/javascript; charset=utf-8'}], body: Buffer.from(scripts[serving]).toString('base64')});
+    if (message.method == 'Fetch.requestPaused') serve(message.params).catch(error => failedActions.push('serving the script: ' + error.message));
     const p = pending.get(message.id); if (!p) return; pending.delete(message.id);
     message.error ? p.reject(new Error(JSON.stringify(message.error))) : p.resolve(message.result);
 });
+// The script under test, in place of the gadget's code in the paused ResourceLoader response that brings it
+async function serve(paused) {
+    const {body, base64Encoded} = await send('Fetch.getResponseBody', {requestId: paused.requestId});
+    const original = base64Encoded ? Buffer.from(body, 'base64').toString('utf8') : body;
+    const swapped = swapGadget(original, scripts[serving]);
+    if (swapped === null) failedActions.push('no StatCalc gadget in ' + paused.request.url.slice(0, 120));
+    return send('Fetch.fulfillRequest', {requestId: paused.requestId, responseCode: paused.responseStatusCode,
+        responseHeaders: paused.responseHeaders.filter(h => !/^(content-encoding|content-length)$/i.test(h.name)), body: Buffer.from(swapped ?? original).toString('base64')});
+}
 const evaluate = async expression => {
     const r = await send('Runtime.evaluate', {expression, awaitPromise: true, returnByValue: true});
     return r.exceptionDetails ? {error: r.exceptionDetails.exception?.description || r.exceptionDetails.text} : r.result.value;
@@ -189,28 +211,37 @@ async function chart() {
 }
 
 async function run(page, skin, which) {
-    const {targetId} = await send('Target.createTarget', {url: 'about:blank'}, null);
+    // A browser context of its own, so every load is a first visit: ResourceLoader keeps modules in localStorage, and a gadget
+    // it takes from there never comes by as a response to swap
+    const {browserContextId} = await send('Target.createBrowserContext', {}, null);
+    const {targetId} = await send('Target.createTarget', {url: 'about:blank', browserContextId}, null);
     ({sessionId} = await send('Target.attachToTarget', {targetId, flatten: true}, null));
-    await send('Page.enable'); await send('Runtime.enable');
+    await send('Page.enable'); await send('Runtime.enable'); await send('Network.enable');
     await send('Page.addScriptToEvaluateOnNewDocument', {source: `window.__longtasks = []; try { new PerformanceObserver(l => { for (const e of l.getEntries()) window.__longtasks.push(Math.round(e.duration)); }).observe({type: 'longtask', buffered: true}); } catch (e) {}`});
-    await send('Fetch.enable', {patterns: [{urlPattern: '*MediaWiki:StatCalc.js*', requestStage: 'Request'}]});
+    if (!(which == 'candidate' && served)) await send('Fetch.enable', {patterns: [{urlPattern: '*load.php*StatCalc*', requestStage: 'Response'}]});
     await send('Emulation.setDeviceMetricsOverride', {width: skin.width, height: 900, deviceScaleFactor: skin.phone ? 2 : 1, mobile: !!skin.phone});
     if (skin.phone) await send('Emulation.setUserAgentOverride', {userAgent: phone});
-    serving = which; loaded = false; exceptions.length = 0; failedActions = [];
-    await send('Page.navigate', {url: `https://bluearchive.wiki/wiki/${encodeURIComponent(page.replace(/ /g, '_'))}?${skin.query}`});
+    serving = which; loaded = false; raw = false; exceptions.length = 0; failedActions = [];
+    // A parameter of its own gets the page as the wiki renders it now: the CDN keeps a copy of each address for a day or more
+    await send('Page.navigate', {url: `https://bluearchive.wiki/wiki/${encodeURIComponent(page.replace(/ /g, '_'))}?${skin.query}&statcalc-check=${Date.now()}`});
     for (let i = 0; i < 900 && !loaded; i++) await wait(100);
-    // StatCalc runs after MediaWiki:Common.js: wait for it to finish, or to throw
+    // Wait for StatCalc to finish, or to throw
     const ready = page == 'Characters StatChart'
-        ? `typeof statCalc === 'object' && Object.keys(statCalc).length > 0 && !!document.querySelector('#statchart-controls .stattable-level')`
+        ? `!!document.querySelector('#statchart-controls .stattable-level') && !!document.querySelector('#charactertable tr.stattable-stats .stat-attack[class*="rank-"]')`
         : `!!document.querySelector('.character-stattable .stattable-controls') && document.querySelector('.character-stattable .stattable-controls').style.display === ''`;
     for (let i = 0; i < 300 && !(await evaluate(ready)) && !exceptions.some(e => e.statcalc); i++) await wait(100);
     await wait(1500);
+    // Without the gadget StatCalc doesn't start; with the old MediaWiki:StatCalc.js loaded as well, it starts twice
+    const state = await evaluate(`mw.loader.getState('ext.gadget.StatCalc')`);
+    if (state !== 'ready') failedActions.push(state === 'registered' ? 'the page does not load the StatCalc gadget' : 'the StatCalc gadget is ' + JSON.stringify(state));
+    if (raw) failedActions.push('MediaWiki:StatCalc.js is loaded as well');
     await evaluate(helpers);
     const result = page == 'Characters StatChart' ? await chart() : await characterPage();
     result.failedActions = failedActions.join(' | ') || 'none';
     const startup = await evaluate(`Math.max(0, ...window.__longtasks)`);
     const errors = exceptions.slice();
     await send('Target.closeTarget', {targetId}, null);
+    await send('Target.disposeBrowserContext', {browserContextId}, null);
     return {result, startup, errors};
 }
 
@@ -231,7 +262,7 @@ function differences(a, b, prefix = '') {
     return out;
 }
 
-console.log(`Baseline: ${baselineName}\nCandidate: ${path.relative(process.cwd(), candidateFile)}\n`);
+console.log(`Baseline: ${baselineName}\nCandidate: ${served ? 'the script the wiki serves' : path.relative(process.cwd(), candidateFile)}\n`);
 let failed = 0;
 for (const {page, skin} of runs) {
     const a = await run(page, skin, 'baseline'), b = await run(page, skin, 'candidate');

@@ -1,0 +1,2 @@
+Pages with the character stat calculator, category added by [[Template:CharacterStatTable]] and [[Template:StatChartControls]]. Used as a service category to load the StatCalc gadget, [[MediaWiki:Gadget-StatCalc.js]], which also runs affection and potential tables of character pages.
+__HIDDENCAT__
